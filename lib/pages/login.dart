@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_fb_auth_emailpass/pages/forgot_password.dart';
 import 'package:flutter_fb_auth_emailpass/pages/signup.dart';
 import 'package:flutter_fb_auth_emailpass/pages/user/user_main.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class Login extends StatefulWidget {
   Login({Key? key}) : super(key: key);
@@ -21,10 +22,14 @@ class _LoginState extends State<Login> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
+  final storage = new FlutterSecureStorage();
+
   userLogin() async {
     try {
-      await FirebaseAuth.instance
+      UserCredential userCredential = await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
+      // print(userCredential.user?.uid);
+      await storage.write(key: "uid", value: userCredential.user?.uid);
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(

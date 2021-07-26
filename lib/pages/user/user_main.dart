@@ -4,6 +4,7 @@ import 'package:flutter_fb_auth_emailpass/pages/login.dart';
 import 'package:flutter_fb_auth_emailpass/pages/user/change_password.dart';
 import 'package:flutter_fb_auth_emailpass/pages/user/dashboard.dart';
 import 'package:flutter_fb_auth_emailpass/pages/user/profile.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class UserMain extends StatefulWidget {
   UserMain({Key? key}) : super(key: key);
@@ -14,6 +15,7 @@ class UserMain extends StatefulWidget {
 
 class _UserMainState extends State<UserMain> {
   int _selectedIndex = 0;
+  final storage = new FlutterSecureStorage();
   static List<Widget> _widgetOptions = <Widget>[
     Dashboard(),
     Profile(),
@@ -36,6 +38,7 @@ class _UserMainState extends State<UserMain> {
             ElevatedButton(
               onPressed: () async => {
                 await FirebaseAuth.instance.signOut(),
+                await storage.delete(key: "uid"),
                 Navigator.pushAndRemoveUntil(
                     context,
                     MaterialPageRoute(
